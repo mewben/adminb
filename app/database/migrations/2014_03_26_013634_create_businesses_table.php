@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCampusesTable extends Migration {
+class CreateBusinessesTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,15 +12,15 @@ class CreateCampusesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('campuses', function(Blueprint $table)
+		Schema::create('businesses', function(Blueprint $table)
 		{
-			$table->increments('id', 2);
+			$table->increments('id');
 			$table->string('name');
-			$table->string('address')->nullable();
+			$table->string('website')->nullable();
 			$table->string('status')->nullable();
-			$table->string('color', 7)->nullable();
 
 			$table->softDeletes();
+			$table->timestamps();
 
 			$table->unique('name');
 			$table->index('name');
@@ -34,7 +34,7 @@ class CreateCampusesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('campuses');
+		Schema::drop('businesses');
 	}
 
 }

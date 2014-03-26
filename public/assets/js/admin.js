@@ -1463,7 +1463,24 @@ angular.module('ssg', [
 				reloadOnSearch: false
 			});*/
 			$routeProvider.when('/admin/404', {templateUrl: '/ang/partials/admin/404.html'});
-			$routeProvider.otherwise({redirectTo: '/admin/candidates'});
+			$routeProvider.otherwise({redirectTo: '/admin/products'});
+		}
+	])
+
+	.run([
+		'$rootScope',
+		'$http',
+		'CSRF_TOKEN',
+		function ($rootScope, $http, CSRF_TOKEN) {
+
+			$http.defaults.headers.common._token = CSRF_TOKEN;
+
+			$rootScope.$on('$routeChangeStart', function (next, current) {
+				$rootScope.items = {};
+			});
+
+			$rootScope.$on('$routeChangeSuccess', function (next, current) {
+			});
 		}
 	]);
 angular.module('ssg')
@@ -1534,7 +1551,7 @@ angular.module('ssg')
 
 			// initialize item every page
 			$rootScope.menu = window.menu;
-			$rootScope.sy_g = window.sy_g;
+			$rootScope.business = window.business;
 			$rootScope.sem_g = window.sem_g;
 			$rootScope.item = {};
 			$rootScope.itemg = {};
@@ -1580,7 +1597,6 @@ angular.module('ssg')
 				if(!$rootScope.item.status)	$rootScope.item.status = null;
 				if(!$rootScope.item.year)	$rootScope.item.year = null;
 				if(!$rootScope.item.college_id)	$rootScope.item.college_id = null;
-				console.log($rootScope.item);
 
 				if(!$rootScope.item.id)		Api($rootScope.table).save($rootScope.item, successCallback, Notify.errorCallback);
 				else						Api($rootScope.table).update({id: $rootScope.item.id}, $rootScope.item, successCallback, Notify.errorCallback);
@@ -1616,6 +1632,56 @@ angular.module('ssg')
 			$rootScope.get = function(table) {
 				return Api(table).query({list: 1});
 			};
+		}
+	])
+
+	.controller('CustomerCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'customers';
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+		}
+	])
+
+	.controller('OrderCtrl', [
+		'$rootScope',
+		'$scope',
+		'Api',
+		'$location',
+		function ($rootScope, $scope, Api, $location) {
+			$rootScope.table = 'orders';
+			$scope.display = null;
+
+			$scope.products = Api('products').query();
+
+			$scope.show = function (what) {
+				$scope.display = what;
+			};
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+		}
+	])
+
+	.controller('ProductCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'products';
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
 		}
 	])
 

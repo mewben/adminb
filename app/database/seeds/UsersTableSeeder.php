@@ -12,19 +12,22 @@ class UsersTableSeeder extends Seeder {
 			[
 				'name' => 'admin',
 				'desc' => 'Administrator'
-			],
-			[
-				'name' => 'bei',
-				'desc' => 'Can retrieve data'
-			],
+			]
 		]);
 		$u = User::create([
 			'username' => 'superadmin',
-			'email' => 'melvinsoldia@bisu.edu.ph',
+			'email' => 'melvinsoldia@gmail.com',
+			'password' => 'passwD',
+			'confirmed' => true
+		]);
+		$u2 = User::create([
+			'username' => 'user1',
+			'email' => 'melvin_soldia@yahoo.com',
 			'password' => 'passwD',
 			'confirmed' => true
 		]);
 
 		$u->roles()->attach(1);
+		$u2->roles()->attach(2);
 	}
 }

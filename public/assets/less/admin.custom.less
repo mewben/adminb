@@ -7,6 +7,31 @@ h1, h2, h3, h4, h5, h6 {
 h1, h2, h3, h4, h5, h6 {font-weight: 200;}
 .tooltip {z-index: 2000;}
 a {cursor: pointer;}
+.box {
+    border: 1px solid @gray-lighter;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 40px;
+    padding: 10px;
+
+    a {
+
+        &:hover,
+        &:focus {
+            opacity: 0.8;
+        }
+    }
+
+    .details {
+        text-align: center;
+    }
+
+    #plus {
+        text-align:center;
+        font-size: 8em;
+    }
+}
+
 #menu {
 	position:fixed;
 	width: 160px;
@@ -58,11 +83,21 @@ a {cursor: pointer;}
       		}
 		}
 		a.logo {
-			background-color: #FFB979;
-			color: #fff;
+			background-color: @brand-custom1;
+			color: #000;
 		}
 	}
 }
+.product-price {
+    font-weight: bold;
+}
+.product-name {
+    padding: 5px 0;
+    border-top: 1px solid @gray-lighter;
+    border-bottom: 1px solid @gray-lighter;
+    font-weight: bold;
+}
+
 #main {
 	padding-left: 160px;
 

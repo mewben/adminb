@@ -72,7 +72,7 @@ App::error(function(Exception $exception, $code)
 		return Response::json($exception->getMessage(), 400);
 	} else {
 		//Log::error($exception);
-		return Response::json($exception->getMessage(), 500);
+		//return Response::json($exception->getMessage(), 500);
 	}
 });
 

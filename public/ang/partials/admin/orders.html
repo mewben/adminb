@@ -1,0 +1,180 @@
+<div class="content">
+	<section class="container-slide" ng-switch on="display">
+		<div class="slide" ng-switch-default>
+			<div class="page-header">
+				<div class="row">
+					<div class="col-md-4">
+							<h2>
+								<i class="fa fa-fw fa-plane"></i> Orders
+								<button type="button" data-ng-click="show('add')" class="btn btn-primary"><i class="fa fa-plus"></i> Add New Order</button>
+								<span class="load animate spin" data-loading></span>
+							</h2>
+					</div>
+					<div class="col-md-8 text-right">
+						<h2>
+							<form class="form-inline" role="form">
+								<div class="form-group">
+									<i class="fa fa-fw fa-search"></i>
+									<input type="text" class="form-control no-style" placeholder="Search List ..." data-ng-model="search">
+								</div>
+								<div class="form-group">
+									<div class="btn-group">
+										<button type="button" class="btn btn-default" data-ng-click="changeFilter('active')" data-ng-class="{active: itemParams.filter=='active'}">ACTIVE</button>
+										<button type="button" class="btn btn-default" data-ng-click="changeFilter('blocked')" data-ng-class="{active: itemParams.filter=='blocked'}">BLOCKED</button>
+										<button type="button" class="btn btn-default" data-ng-click="changeFilter('trashed')" data-ng-class="{active: itemParams.filter=='trashed'}">TRASHED</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="btn-group">
+										<button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
+										<button type="button" class="btn btn-default">0/0</button>
+										<button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
+									</div>
+								</div>
+							</form>
+						</h2>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-data">
+				<table class="table table-hover table-condensed">
+					<thead>
+						<tr>
+							<th width="2%">#</th>
+							<th>Customer ID</th>
+							<th>Customer Name</th>
+							<th>Address</th>
+							<th>Contact</th>
+							<th width="16%">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="i in items.data | orderBy:['name'] | filter:search">
+							<td>{{$index + 1}}.</td>
+							<td><strong>{{i.id}}</strong></td>
+							<td>{{i.name}}</td>
+							<td>{{i.address}}</td>
+							<td>{{i.contact}}</td>
+							<td>
+								<button type="button" class="btn btn-info btn-sm" data-ng-click="editItem(i)" data-ng-hide="itemParams.filter=='trashed'">Edit</button>
+								<button type="button" class="btn btn-danger btn-sm" data-ng-click="deleteItem(i.id)" data-ng-hide="itemParams.filter=='trashed'">Delete</button>
+								<button type="button" class="btn btn-warning btn-sm" data-ng-click="restoreItem(i)" data-ng-show="itemParams.filter=='trashed'">Restore</button>
+								<button type="button" class="btn btn-danger btn-sm" data-ng-click="forceDeleteItem(i.id)" data-ng-show="itemParams.filter=='trashed'">Force Delete</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="cover" data-loading></div>
+			</div>
+		</div> <!-- ./default -->
+		<div class="slide" ng-switch-when="add">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="page-header">
+						<h2>
+							<a href="#" ng-click="show(null)"><i class="fa fa-chevron-left"></i></a>
+							Select Products
+						</h2>
+					</div>
+					<div class="products">
+						<div class="row">
+							<div class="col-sm-6" ng-repeat="p in products.data">
+								<div class="box">
+									<h3 class="product-price text-center">{{p.unitprice}} <div><small>USD</small></div></h3>
+									<p class="product-name">{{p.name}}</p>
+									<section class="text-center">
+										<div class="btn-group btn-justified">
+											<button ng-click="padd(p)" class="btn btn-info"><i class="fa fa-plus fa-fw"></i></button>
+											<button ng-click="pdel(p)" class="btn btn-warning"><i class="fa fa-minus fa-fw"></i></button>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-9">
+					<div class="page-header">
+						<h3>Order Summary</h3>
+						<button data-target="#search" data-toggle="modal" class="btn btn-warning btn-lg"><i class="fa fa-search"></i> Search Customer</button>
+					</div>
+					<div class="summary">
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Item #</th>
+									<th>Item</th>
+									<th class="text-right">Unit Price</th>
+									<th class="text-right">Quantity</th>
+									<th class="text-right">Discount</th>
+									<th class="text-right">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="it in pitems">
+									<td>{{$index + 1}}.</td>
+									<td>{{it.id}}</td>
+									<td><strong>{{it.name}}</strong></td>
+									<td class="text-right">{{it.unitprice}} <small class="text-muted">USD</small></td>
+									<td class="text-right">{{it.quantity}}</td>
+									<td class="text-right">{{it.discount}}<small class="text-muted">%</small></td>
+									<td class="text-right">{{ (it.unitprice * it.quantity) - ( (it.unitprice * it.quantity) * (it.discount / 100) ) | currency: ""}} <small class="text-muted">USD</small></td>
+								</tr>
+								<tr>
+									<td class="text-right" colspan="6"><h4><strong>Grand Total:</strong></h4></td>
+									<td class="text-right"><h4><strong>{{total() | currency: ""}}</strong> <small class="text-muted">USD</small></h4></td>
+								</tr>
+							</tbody>
+						</table>
+
+						<div class="text-right">
+							<button class="btn btn-info btn-lg">Continue</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+<div class="modal fade" id="search" tabindex="-1" role="dialog" aria-labelledby="CRUD" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Search Customer</h4>
+			</div>
+			<div class="modal-body">
+				<form ng-submit="searchCustomer()" class="form-inline">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Customer Name" ng-model="searchText">
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary">Search</button>
+					</div>
+				</form>
+				<table class="table table-condensed" ng-show="searchResults">
+					<thead>
+						<tr>
+							<th>Search Results:</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="r in searchResults.data">
+							<td ng-click="selectCustomer(r)">
+								<button ng-click="selectCustomer(r)" class="btn btn-sm btn-success">Select</button> - {{r.name}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<span class="load animate spin" data-loading></span>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-angle-left fa-fw"></i> Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -18,7 +18,7 @@
 			<div id="menu">
 				<div class="menu-open text-center">
 					<ul class="nav">
-						<li><a href="/admin" target="_self" class="logo"><i class="fa fa-archive fa-3x"></i> <h4>SSG Elections</h4></a></li>
+						<li><a href="/admin" target="_self" class="logo"><i class="fa fa-laptop fa-3x"></i> <h5>Business Admin</h5></a></li>
 					</ul>
 					<ul class="nav side">
 						<?php foreach($session['menu'] as $key => $menu): ?>
@@ -35,36 +35,10 @@
 			<div id="main">
 				<!-- Navbar -->
 				<div class="navbar navbar-inverse navbar-static-top" role="navigation">
+					<p class="navbar-text"><?php echo $session['business']['name'] ?></p>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-bookmark fa-fw fa-2x"></i> <?php echo $session['campus']['name'] ?>| SY: <?php echo isset($session['sem']['sy']) ? $session['sem']['sy'] . "-" . (($session['sem']['sy'] - 0) + 1) : "No semester" ?> Sem: <?php echo isset($session['sem']['sem']) ? $session['sem']['sem'] : "0" ?>
-								<span class="caret"></span>
-							</a>
-							<?php echo Form::open(['url' => '/api/v1/sessions', 'method' => 'post', 'role' => 'form', 'class' => 'dropdown-menu form']) ?>
-								<?php if(isset($session['campuses'])) : ?>
-								<div class="form-group">
-									<?php echo Form::select('campus_id_g', $session['campuses'], $session['campus']['id'], array('class'=>'form-control', 'autocomplete'=>'off')) ?>
-								</div>
-								<?php endif ?>
-								<div class="form-group">
-									<div class="row">
-										<div class="col-xs-8">
-											<div class="input-group">
-												<input type="text" id="sy_g" name="sy_g" data-ng-model="sy_g" class="form-control" maxlength="4" placeholder="SY" required>
-												<span class="input-group-addon">{{ (sy_g - 0) + 1 }}</span>
-											</div>
-										</div>
-										<div class="col-xs-4">
-											<input type="text" class="form-control" name="sem_g" data-ng-model="sem_g" placeholder="Sem" maxlength="1" required>
-										</div>
-									</div>
-								</div>
-								<button type="submit" class="btn btn-primary btn-block btn-sm"><i class="fa fa-fw fa-check"></i> Change</button>
-							<?php echo Form::close() ?>
-						</li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-fw fa-2x"></i> <?php echo $session['username'] ?> <b class="caret"></b></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-fw"></i> <?php echo $session['username'] ?> <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li class="dropdown-header">username</li>
 								<li><a data-toggle="modal" data-target="#pwd"><i class="fa fa-lock fa-fw"></i> Change password</a></li>
@@ -165,8 +139,7 @@
 
 		<script>
 			window.menu = <?php echo json_encode($session['menu']) ?>;
-			window.sy_g = <?php echo isset($session['sem']['sy']) ? $session['sem']['sy'] : '""' ?>;
-			window.sem_g = <?php echo isset($session['sem']['sem']) ? $session['sem']['sem'] : '""' ?>;
+			window.business = <?php echo json_encode($session['business']) ?>;
 			angular.module('ssg').constant('CSRF_TOKEN', '<?php echo csrf_token() ?>');
 		</script>
 	</body>

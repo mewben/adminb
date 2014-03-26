@@ -62,6 +62,23 @@ angular.module('ssg', [
 				reloadOnSearch: false
 			});*/
 			$routeProvider.when('/admin/404', {templateUrl: '/ang/partials/admin/404.html'});
-			$routeProvider.otherwise({redirectTo: '/admin/candidates'});
+			$routeProvider.otherwise({redirectTo: '/admin/products'});
+		}
+	])
+
+	.run([
+		'$rootScope',
+		'$http',
+		'CSRF_TOKEN',
+		function ($rootScope, $http, CSRF_TOKEN) {
+
+			$http.defaults.headers.common._token = CSRF_TOKEN;
+
+			$rootScope.$on('$routeChangeStart', function (next, current) {
+				$rootScope.items = {};
+			});
+
+			$rootScope.$on('$routeChangeSuccess', function (next, current) {
+			});
 		}
 	]);

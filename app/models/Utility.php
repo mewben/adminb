@@ -11,7 +11,7 @@ class Utility extends BaseModel {
 			Session::put('user', Confide::user()->toArray());
 			Session::put('user.roles', Confide::user()->roles->toArray());
 
-			if ($sem = Configuration::get('current_semester', Session::get('user.campus_id')))
+			/*if ($sem = Configuration::get('current_semester', Session::get('user.campus_id')))
 				Session::put('user.sem', Semester::findOrFail($sem['value'])->toArray());
 
 			if (Session::get('user.campus_id') == NULL) {
@@ -19,7 +19,7 @@ class Utility extends BaseModel {
 				Session::put('user.campus', Campus::first()->toArray());
 			} else {
 				Session::put('user.campus', Campus::findOrFail(Session::get('user.campus_id'))->toArray());
-			}
+			}*/
 
 			Session::put('user.menu', static::getMenu());
 		}
@@ -57,83 +57,40 @@ class Utility extends BaseModel {
 		$min = App::environment('dev') ? 'partials' : 'partials-min';
 
 		$menu = [
-			'candidates' => [
-				'url' => '/admin/candidates',
-				'baseurl' => '/admin/candidates',
-				'ctrl' => 'CandidateCtrl',
-				'temp' => "/ang/{$min}/admin/candidates.html",
-				'icon' => 'fa-sitemap'
+			'products' => [
+				'url' => '/admin/products',
+				'baseurl' => '/admin/products',
+				'ctrl' => 'ProductCtrl',
+				'temp' => "/ang/{$min}/admin/products.html",
+				'icon' => 'fa-lemon-o'
 			],
-			'voters' => [
-				'url' => '/admin/voters',
-				'baseurl' => '/admin/voters',
-				'ctrl' => 'VoterCtrl',
-				'temp' => "/ang/{$min}/admin/voters.html",
+			'customers' => [
+				'url' => '/admin/customers',
+				'baseurl' => '/admin/customers',
+				'ctrl' => 'CustomerCtrl',
+				'temp' => "/ang/{$min}/admin/customers.html",
 				'icon' => 'fa-users'
 			],
-			'manage' => [
-				'url' => '/admin/manage/semesters',
-				'baseurl' => '/admin/manage',
-				'icon' => 'fa-briefcase',
-				'sub' => [
-					[
-						'title' => 'Campuses',
-						'url' => '/admin/manage/campuses',
-						'ctrl' => 'CampusCtrl',
-						'temp' => "/ang/{$min}/admin/manage.campuses.html",
-						'icon' => 'fa-building-o',
-						'access' => ['superadmin']
-					],
-					[
-						'title' => 'Semesters',
-						'url' => '/admin/manage/semesters',
-						'ctrl' => 'SemesterCtrl',
-						'temp' => "/ang/{$min}/admin/manage.semesters.html",
-						'icon' => 'fa-wrench'
-					],
-					[
-						'title' => 'Colleges',
-						'url' => '/admin/manage/colleges',
-						'ctrl' => 'CollegeCtrl',
-						'temp' => "/ang/{$min}/admin/manage.colleges.html",
-						'icon' => 'fa-shield'
-					],
-					[
-						'title' => 'Positions',
-						'url' => '/admin/manage/positions',
-						'ctrl' => 'PositionCtrl',
-						'temp' => "/ang/{$min}/admin/manage.positions.html",
-						'icon' => 'fa-wheelchair'
-					],
-					[
-						'title' => 'Party',
-						'url' => '/admin/manage/party',
-						'ctrl' => 'PartyCtrl',
-						'temp' => "/ang/{$min}/admin/manage.party.html",
-						'icon' => 'fa-list-alt'
-					],
-					[
-						'title' => 'Admin Users',
-						'url' => '/admin/manage/users',
-						'ctrl' => 'UserCtrl',
-						'temp' => "/ang/{$min}/admin/manage.users.html",
-						'icon' => 'fa-user'
-					]
-				]
+			'orders' => [
+				'url' => '/admin/orders',
+				'baseurl' => '/admin/orders',
+				'ctrl' => 'OrderCtrl',
+				'temp' => "/ang/{$min}/admin/orders.html",
+				'icon' => 'fa-plane'
 			],
-			'results' => [
-				'url' => '/admin/results',
-				'baseurl' => '/admin/results',
-				'ctrl' => 'ResultCtrl',
-				'temp' => "/ang/{$min}/admin/results.html",
-				'icon' => 'fa-bar-chart-o'
+			'sales' => [
+				'url' => '/admin/sales',
+				'baseurl' => '/admin/sales',
+				'ctrl' => 'SalesCtrl',
+				'temp' => "/ang/{$min}/admin/sales.html",
+				'icon' => 'fa-money'
 			],
-			'election' => [
-				'url' => '/admin/election',
-				'baseurl' => '/admin/election',
-				'icon' => 'fa-flag-checkered',
-				'ctrl' => 'ElectionCtrl',
-				'temp' => "/ang/{$min}/admin/elections.html"
+			'transactions' => [
+				'url' => '/admin/transactions',
+				'baseurl' => '/admin/transactions',
+				'ctrl' => 'TransactionCtrl',
+				'temp' => "/ang/{$min}/admin/transactions.html",
+				'icon' => 'fa-suitcase'
 			]
 		];
 

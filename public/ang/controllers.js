@@ -11,7 +11,7 @@ angular.module('ssg')
 
 			// initialize item every page
 			$rootScope.menu = window.menu;
-			$rootScope.sy_g = window.sy_g;
+			$rootScope.business = window.business;
 			$rootScope.sem_g = window.sem_g;
 			$rootScope.item = {};
 			$rootScope.itemg = {};
@@ -57,7 +57,6 @@ angular.module('ssg')
 				if(!$rootScope.item.status)	$rootScope.item.status = null;
 				if(!$rootScope.item.year)	$rootScope.item.year = null;
 				if(!$rootScope.item.college_id)	$rootScope.item.college_id = null;
-				console.log($rootScope.item);
 
 				if(!$rootScope.item.id)		Api($rootScope.table).save($rootScope.item, successCallback, Notify.errorCallback);
 				else						Api($rootScope.table).update({id: $rootScope.item.id}, $rootScope.item, successCallback, Notify.errorCallback);
@@ -93,6 +92,98 @@ angular.module('ssg')
 			$rootScope.get = function(table) {
 				return Api(table).query({list: 1});
 			};
+		}
+	])
+
+	.controller('CustomerCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'customers';
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+		}
+	])
+
+	.controller('OrderCtrl', [
+		'$rootScope',
+		'$scope',
+		'$http',
+		'Api',
+		'$location',
+		function ($rootScope, $scope, $http, Api, $location) {
+			$rootScope.table = 'orders';
+			$scope.display = null;
+			$scope.pitems = {};
+			$scope.searchText = null;
+			$scope.searchResults = {};
+
+			$scope.products = Api('products').query();
+
+			$scope.show = function (what) {
+				$scope.display = what;
+			};
+
+			$scope.padd = function(p) {
+				if (!$scope.pitems.hasOwnProperty(p.id)) { // product not yet added
+					p.quantity = 1;
+					$scope.pitems[p.id] = p;
+				} else {
+					$scope.pitems[p.id].quantity += 1;
+				}
+			};
+
+			$scope.pdel = function(p) {
+				if ($scope.pitems.hasOwnProperty(p.id)) { // product not yet added
+					$scope.pitems[p.id].quantity -= 1;
+
+					if ($scope.pitems[p.id].quantity === 0)
+						delete $scope.pitems[p.id];
+				}
+			};
+
+			$scope.total = function() {
+				var t = 0;
+				angular.forEach($scope.pitems, function (value, key) {
+					t +=  (value.unitprice * value.quantity) - ( (value.unitprice * value.quantity) * (value.discount / 100) );
+				});
+
+				return t;
+			};
+
+			$scope.searchCustomer = function() {
+				if ($scope.searchText)
+					$http.get('/api/v1/customers?search=' + $scope.searchText).success(function (result) {
+						$scope.searchResults = result;
+					});
+			};
+
+			$scope.selectCustomer = function(c) {
+				console.log(c);
+			};
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+		}
+	])
+
+	.controller('ProductCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'products';
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
 		}
 	])
 

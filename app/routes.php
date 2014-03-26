@@ -14,6 +14,9 @@
 // API V1
 Route::group(array('prefix' => 'api/v1', 'before' => 'auth'), function() {
 
+	Route::resource('products', 'ProductsController');
+	Route::resource('customers', 'CustomersController');
+
 	Route::resource('campuses', 'CampusesController');
 	Route::resource('candidates', 'CandidatesController');
 	Route::resource('colleges', 'CollegesController');
@@ -39,18 +42,29 @@ Route::group(array('prefix' => 'api/v1', 'before' => 'auth'), function() {
 Route::get('/admin/login', 'UsersController@login');
 Route::post('/admin/login', 'UsersController@postlogin');
 Route::get('/admin/logout', 'UsersController@logout');
+Route::post('/admin/business', function() {
+	// select business
+	$model = Business::findOrFail(Input::get('id'));
+	Session::put('user.business', $model->toArray());
+	return Response::json(true);
+});
 
-Route::get('/admin/{path?}', array('before' => 'auth|closedvoting', function ($path = null) {
+Route::get('/admin/{path?}', array('before' => 'auth', function ($path = null) {
 
-	$session = Session::get('user');
-	return View::make('layouts.admin', compact('session'));
+	if (Session::has('user.business')) {
+		$session = Session::get('user');
+		return View::make('layouts.admin', compact('session'));
+	} else { // choose business
+		$business = Business::all()->toArray();
+		return View::make('layouts.business', compact('business'));
+	}
 
 }))->where('path', '.*');
 
 
 
 
-
+/*
 // ETC
 Route::get('/login', 'SessionsController@create');
 Route::post('/login', 'SessionsController@store');
@@ -74,7 +88,7 @@ Route::group(array('before' => 'voterloggedin'), function() {
 
 });
 
-
+*/
 Route::get('/test2', function() {
 	print_r(Session::get('user'));
 });

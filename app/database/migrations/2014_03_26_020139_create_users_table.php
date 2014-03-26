@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ConfideSetupUsersTable extends Migration {
+class CreateUsersTable extends Migration {
 
     /**
      * Run the migrations.
@@ -19,7 +19,6 @@ class ConfideSetupUsersTable extends Migration {
             $table->string('username');
             $table->string('email');
             $table->string('password');
-            $table->integer('campus_id')->unsigned()->nullable();
             $table->string('confirmation_code')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->string('status')->nullable();
@@ -31,7 +30,6 @@ class ConfideSetupUsersTable extends Migration {
             $table->unique('email');
             $table->index('username');
             $table->index('email');
-            $table->foreign('campus_id')->references('id')->on('campuses');
         });
 
         // Creates password reminders table
@@ -52,10 +50,6 @@ class ConfideSetupUsersTable extends Migration {
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropForeign('users_campus_id_foreign');
-        });
-
         Schema::drop('password_reminders');
         Schema::drop('users');
     }

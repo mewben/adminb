@@ -40,6 +40,13 @@
   font-weight: normal;
   font-style: normal;
 }
+/*
+@brand-primary:         #45c8dc;
+@brand-success:         #5cb85c;
+@brand-info:            #45c8dc;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+*/
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;
@@ -322,12 +329,12 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #45c8dc;
+  color: #182732;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #22a0b3;
+  color: #000000;
   text-decoration: underline;
 }
 a:focus {
@@ -532,10 +539,10 @@ cite {
   color: #999999;
 }
 .text-primary {
-  color: #45c8dc;
+  color: #182732;
 }
 a.text-primary:hover {
-  color: #26b3c8;
+  color: #070c10;
 }
 .text-success {
   color: #3c763d;
@@ -563,10 +570,10 @@ a.text-danger:hover {
 }
 .bg-primary {
   color: #fff;
-  background-color: #45c8dc;
+  background-color: #182732;
 }
 a.bg-primary:hover {
-  background-color: #26b3c8;
+  background-color: #070c10;
 }
 .bg-success {
   background-color: #dff0d8;
