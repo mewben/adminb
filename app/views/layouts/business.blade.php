@@ -56,7 +56,7 @@
 										<div class="details">
 											<h4>{{$b['name']}}</h4>
 											<span class="text-muted">
-												<a class="btn-link" href="#">Select</a> /
+												<a ng-click="select({{$b['id']}});" class="btn-link" href="#">Select</a> /
 												<a class="btn-link" href="#">Edit</a>
 											</span>
 										</div>

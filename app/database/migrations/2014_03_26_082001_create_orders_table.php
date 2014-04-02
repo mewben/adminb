@@ -19,7 +19,9 @@ class CreateOrdersTable extends Migration {
 			$table->date('date');
 			$table->string('status')->nullable();
 			$table->integer('business_id')->unsiged();
+			$table->float('price')->default(0);
 			$table->timestamps();
+			$table->softDeletes();
 
 			$table->foreign('customer_id')->references('id')->on('customers');
 			$table->foreign('business_id')->references('id')->on('businesses');
@@ -45,8 +47,8 @@ class CreateOrdersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('orders');
 		Schema::drop('order_details');
+		Schema::drop('orders');
 	}
 
 }

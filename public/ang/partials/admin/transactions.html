@@ -1,0 +1,105 @@
+<div class="content">
+	<div class="page-header">
+		<div class="row">
+			<div class="col-md-12">
+					<h2>
+						<i class="fa fa-fw fa-suitcase"></i> Transactions
+						<button type="button" data-ng-click="showAdd()" class="btn btn-primary"><i class="fa fa-plus"></i> Add New Transaction</button>
+						<span class="load animate spin" data-loading></span>
+					</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-data">
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th width="16%">Actions</th>
+					<th>Date</th>
+					<th>Notes</th>
+					<th class="text-right">Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="i in items.data | orderBy:['date'] | filter:search">
+					<td>
+						<button type="button" class="btn btn-info btn-sm" data-ng-click="editItem(i)" data-ng-hide="itemParams.filter=='trashed'">Edit</button>
+						<button type="button" class="btn btn-danger btn-sm" data-ng-click="deleteItem(i.id)" data-ng-hide="itemParams.filter=='trashed'">Delete</button>
+						<button type="button" class="btn btn-warning btn-sm" data-ng-click="restoreItem(i)" data-ng-show="itemParams.filter=='trashed'">Restore</button>
+						<button type="button" class="btn btn-danger btn-sm" data-ng-click="forceDeleteItem(i.id)" data-ng-show="itemParams.filter=='trashed'">Force Delete</button>
+					</td>
+					<td>{{i.date}}</td>
+					<td>{{i.notes}}</td>
+					<td class="text-right">
+						<span ng-if="i.type == 'expense'">
+						 	- {{i.amount | currency}}
+						</span>
+						<span ng-if="i.type == 'income'">
+						 	{{i.amount | currency}}
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="text-right" colspan="3"><strong>Balance:</strong></td>
+					<td class="text-right"><strong>{{items.balance | currency}}</strong></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="cover" data-loading></div>
+	</div>
+
+</div>
+
+<div class="modal fade" id="crud" tabindex="-1" role="dialog" aria-labelledby="CRUD" aria-hidden="true">
+	<div class="modal-dialog">
+		<form class="modal-content form-horizontal" data-ng-submit="addItem()" role="form" name="crud">
+			<div class="modal-header">
+				<button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Add Transaction</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="type" class="control-label col-sm-3">Transaction Type <span class="required">*</span></label>
+					<div class="col-sm-9">
+						<div class="radio">
+							<label>
+								<input type="radio" name="type" ng-model="item.type" value="income">
+								Income
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="type" ng-model="item.type" value="expense">
+								Expense
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="date" class="col-sm-3 control-label">Date <span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="date" placeholder="YYYY-MM-DD" data-ng-model="item.date" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Amount <span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control text-right" placeholder="0.00" data-ng-model="item.amount">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Notes</label>
+					<div class="col-sm-9">
+						<textarea class="form-control" placeholder="Notes" data-ng-model="item.notes"></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<span class="load animate spin" data-loading></span>
+				<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-angle-left fa-fw"></i> Cancel</button>
+				<button type="submit" class="btn btn-primary" data-ng-disabled="!crud.$valid"><i class="fa fa-check fa-fw"></i> Save Changes</button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -91,6 +91,13 @@ class Utility extends BaseModel {
 				'ctrl' => 'TransactionCtrl',
 				'temp' => "/ang/{$min}/admin/transactions.html",
 				'icon' => 'fa-suitcase'
+			],
+			'banks' => [
+				'url' => '/admin/banks',
+				'baseurl' => '/admin/banks',
+				'ctrl' => 'BankCtrl',
+				'temp' => "/ang/{$min}/admin/banks.html",
+				'icon' => 'fa-credit-card'
 			]
 		];
 

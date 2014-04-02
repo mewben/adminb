@@ -6,7 +6,7 @@
 					<div class="col-md-4">
 							<h2>
 								<i class="fa fa-fw fa-plane"></i> Orders
-								<button type="button" data-ng-click="show('add')" class="btn btn-primary"><i class="fa fa-plus"></i> Add New Order</button>
+								<button type="button" data-ng-click="showAdd()" class="btn btn-primary"><i class="fa fa-plus"></i> Add New Order</button>
 								<span class="load animate spin" data-loading></span>
 							</h2>
 					</div>
@@ -42,22 +42,23 @@
 					<thead>
 						<tr>
 							<th width="2%">#</th>
-							<th>Customer ID</th>
-							<th>Customer Name</th>
+							<th>Cust. ID</th>
+							<th>Cust. Name</th>
 							<th>Address</th>
 							<th>Contact</th>
+							<th>Price</th>
 							<th width="16%">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="i in items.data | orderBy:['name'] | filter:search">
+						<tr data-ng-repeat="i in items.data | orderBy:['-created_at'] | filter:search">
 							<td>{{$index + 1}}.</td>
 							<td><strong>{{i.id}}</strong></td>
-							<td>{{i.name}}</td>
-							<td>{{i.address}}</td>
-							<td>{{i.contact}}</td>
+							<td>{{i.customer.name}}</td>
+							<td>{{i.customer.address}}</td>
+							<td>{{i.customer.contact}}</td>
+							<td>{{i.price | currency}}</td>
 							<td>
-								<button type="button" class="btn btn-info btn-sm" data-ng-click="editItem(i)" data-ng-hide="itemParams.filter=='trashed'">Edit</button>
 								<button type="button" class="btn btn-danger btn-sm" data-ng-click="deleteItem(i.id)" data-ng-hide="itemParams.filter=='trashed'">Delete</button>
 								<button type="button" class="btn btn-warning btn-sm" data-ng-click="restoreItem(i)" data-ng-show="itemParams.filter=='trashed'">Restore</button>
 								<button type="button" class="btn btn-danger btn-sm" data-ng-click="forceDeleteItem(i.id)" data-ng-show="itemParams.filter=='trashed'">Force Delete</button>
@@ -70,35 +71,48 @@
 		</div> <!-- ./default -->
 		<div class="slide" ng-switch-when="add">
 			<div class="row">
-				<div class="col-sm-3">
+				<div class="col-sm-12">
 					<div class="page-header">
-						<h2>
-							<a href="#" ng-click="show(null)"><i class="fa fa-chevron-left"></i></a>
-							Select Products
+						<h2><a href="#" ng-click="show(null)"><i class="fa fa-chevron-left"></i></a>
+							New Order
 						</h2>
 					</div>
-					<div class="products">
-						<div class="row">
-							<div class="col-sm-6" ng-repeat="p in products.data">
-								<div class="box">
-									<h3 class="product-price text-center">{{p.unitprice}} <div><small>USD</small></div></h3>
-									<p class="product-name">{{p.name}}</p>
-									<section class="text-center">
-										<div class="btn-group btn-justified">
-											<button ng-click="padd(p)" class="btn btn-info"><i class="fa fa-plus fa-fw"></i></button>
-											<button ng-click="pdel(p)" class="btn btn-warning"><i class="fa fa-minus fa-fw"></i></button>
-										</div>
-									</section>
-								</div>
-							</div>
-						</div>
-					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<table class="table table-condensed products table-hover">
+						<thead>
+							<tr>
+								<th colspan="3">Select Products</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="p in products.data">
+								<td><strong>{{p.name}}</strong></td>
+								<td class="text-right">{{p.unitprice | currency}}</td>
+								<td>
+									<button ng-click="padd(p)" class="btn btn-info"><i class="fa fa-plus fa-fw"></i></button>
+									<button ng-click="pdel(p)" class="btn btn-warning"><i class="fa fa-minus fa-fw"></i></button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
 				</div>
 
 				<div class="col-sm-9">
 					<div class="page-header">
 						<h3>Order Summary</h3>
 						<button data-target="#search" data-toggle="modal" class="btn btn-warning btn-lg"><i class="fa fa-search"></i> Search Customer</button>
+					</div>
+					<div class="text-left">
+						<h3>Order #:</h3>
+						<p class="lead">{{id}}</p>
+					</div>
+					<div class="customer text-right">
+						<div><strong>{{customer.name}}</strong></div>
+						<div class="text-muted">{{customer.address}}</div>
 					</div>
 					<div class="summary">
 						<table class="table table-condensed">
@@ -131,7 +145,8 @@
 						</table>
 
 						<div class="text-right">
-							<button class="btn btn-info btn-lg">Continue</button>
+							<button ng-click="show(null)" class="btn btn-default btn-lg">Back to Orders</button>
+							<button ng-click="saveOrder()" class="btn btn-info btn-lg">Save Order</button>
 						</div>
 					</div>
 				</div>

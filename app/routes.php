@@ -14,8 +14,13 @@
 // API V1
 Route::group(array('prefix' => 'api/v1', 'before' => 'auth'), function() {
 
+	Route::resource('businesses', 'BusinessesController');
+	Route::resource('banks', 'BanksController');
+
 	Route::resource('products', 'ProductsController');
 	Route::resource('customers', 'CustomersController');
+	Route::resource('orders', 'OrdersController');
+	Route::resource('transactions', 'TransactionsController');
 
 	Route::resource('campuses', 'CampusesController');
 	Route::resource('candidates', 'CandidatesController');

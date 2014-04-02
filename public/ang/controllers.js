@@ -55,8 +55,8 @@ angular.module('ssg')
 
 			$rootScope.addItem = function() {
 				if(!$rootScope.item.status)	$rootScope.item.status = null;
-				if(!$rootScope.item.year)	$rootScope.item.year = null;
-				if(!$rootScope.item.college_id)	$rootScope.item.college_id = null;
+				//if(!$rootScope.item.year)	$rootScope.item.year = null;
+				//if(!$rootScope.item.college_id)	$rootScope.item.college_id = null;
 
 				if(!$rootScope.item.id)		Api($rootScope.table).save($rootScope.item, successCallback, Notify.errorCallback);
 				else						Api($rootScope.table).update({id: $rootScope.item.id}, $rootScope.item, successCallback, Notify.errorCallback);
@@ -95,6 +95,20 @@ angular.module('ssg')
 		}
 	])
 
+	.controller('BankCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'banks';
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+		}
+	])
+
 	.controller('CustomerCtrl', [
 		'$rootScope',
 		'$scope',
@@ -115,12 +129,15 @@ angular.module('ssg')
 		'$http',
 		'Api',
 		'$location',
-		function ($rootScope, $scope, $http, Api, $location) {
+		'Notify',
+		function ($rootScope, $scope, $http, Api, $location, Notify) {
 			$rootScope.table = 'orders';
 			$scope.display = null;
 			$scope.pitems = {};
 			$scope.searchText = null;
+			$scope.customer = {};
 			$scope.searchResults = {};
+			$scope.id = null;
 
 			$scope.products = Api('products').query();
 
@@ -135,6 +152,26 @@ angular.module('ssg')
 				} else {
 					$scope.pitems[p.id].quantity += 1;
 				}
+			};
+
+			$scope.showAdd = function(id) {
+				// initialize items
+				$scope.pitems = {};
+				$scope.customer = {};
+				$scope.id = null;
+
+				if (id) {
+					// get the order details
+					$http.get('/api/v1/orders/' + id).success(function (result) {
+						$scope.pitems = result.details;
+						$scope.customer = result.customer;
+						$scope.id = id;
+						$scope.display = 'add';
+					});
+				} else {
+					$scope.display = 'add';
+				}
+
 			};
 
 			$scope.pdel = function(p) {
@@ -163,7 +200,26 @@ angular.module('ssg')
 			};
 
 			$scope.selectCustomer = function(c) {
-				console.log(c);
+				$scope.customer = c;
+				$('.modal').modal('hide');
+			};
+
+			$scope.saveOrder = function() {
+				var order = {
+					customer_id: $scope.customer.id,
+					price: $scope.total()
+				};
+
+				if (!$scope.id) { // add
+					Api('orders').save({order: order, items: $scope.pitems}, function(result) {
+						$scope.id = result.id;
+						Notify.successCallback('Saved successfully.');
+					}, Notify.errorCallback);
+				} else { // update
+					Api('orders').update({id: $scope.id, order: order, items: $scope.pitems}, function(result) {
+						Notify.successCallback('Updated successfully.');
+					}, Notify.errorCallback);
+				}
 			};
 
 			$scope.$watchCollection('itemParams', function (params) {
@@ -184,6 +240,22 @@ angular.module('ssg')
 				$location.search(params);
 				$rootScope.query();
 			}, true);
+		}
+	])
+
+	.controller('TransactionCtrl', [
+		'$rootScope',
+		'$scope',
+		'$location',
+		function ($rootScope, $scope, $location) {
+			$rootScope.table = 'transactions';
+			$scope.balance = 0;
+
+			$scope.$watchCollection('itemParams', function (params) {
+				$location.search(params);
+				$rootScope.query();
+			}, true);
+
 		}
 	])
 
